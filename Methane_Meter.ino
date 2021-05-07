@@ -6,6 +6,7 @@ U8GLIB_SSD1306_128X64 u8g(U8G_I2C_OPT_NO_ACK);
 // Tempo de aquecimento
 int tempo_aquecimento = 30;
 int valor_sensor = 0;
+float voltage = 0.0f;
 unsigned long time;
 int status = 1;
 String estado;
@@ -18,7 +19,9 @@ void draw()
   u8g.setFont(u8g_font_8x13B);
   // Mensagens iniciais
   u8g.drawRFrame(0, 18, 128, 46, 4);
-  u8g.drawStr( 30, 15, "METANO");
+  u8g.setPrintPos(10, 15);
+  u8g.print("METANO   "+String(voltage, 1)+"V");
+  u8g.setFont(u8g_font_ncenB08);
   u8g.drawStr( 10, 37, "Aguarde");
  
   // Animacao caneca
@@ -89,6 +92,8 @@ void setup(void)
  
 void loop(void)
 {
+  int sensorValue = analogRead(A1); //read the A1 pin value
+  voltage = sensorValue * (5.00 / 1023.00) * 2;
   // Leitura do valor do sensor
   valor_sensor = analogRead(GAS_PORT);
   time = millis() / 1000;
